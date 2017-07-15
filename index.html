@@ -1,19 +1,19 @@
 <html>
     <head>
         <script src="https://unpkg.com/vue"></script>
-        <script   src="https://code.jquery.com/jquery-3.2.1.min.js"   integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="   crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
         <style>
             body{
                 font-family: monospace;
             }
             #registry li{
                 display:inline-block;
-                font-size: 5em;
+                font-size: 3em;
                 text-align: center;
                 width: 100px;
             }
             .register{
-                border-left:1px solid black;
+/*                border-left:1px solid black;*/
             }
             .pointer{
                 height:4px;
@@ -30,27 +30,142 @@
                     <div v-if="showUnderline(index+1)" class="pointer"></div>
                 </li>    
             </ol>
+            <div>Registers: {{registers}}</div>
             <div>Program: {{program}}</div>
             <div>Commands: {{commands}}</div>
             <div>Shorthand: {{shorthand}}</div>
             <div>Legible: {{legible}}</div>
             <div>Proper: {{proper}}</div>
             <div>Pointer Range: {{pointerRange}}</div>
+            <div>Pointer A: {{pointerA}}</div>
+            <div>Pointer A Value: {{pointerAValue}}</div>
+            <div>Pointer B: {{pointerB}}</div>
+            <div>Pointer B Value: {{pointerBValue}}</div>
+            <div>Pointers Are Equal?: {{pointersAreEqual}}</div>
             <div>Current Command Index: {{currentCommandIndex}}</div>
             <div>Current Command: {{currentCommand}}</div>
+            <div>Registry Length: {{registryLength}}</div>
+            <div>Program Length: {{programLength}}</div>
+            <div>Open Commands: {{openCommands}}</div>
+            <div>Close Commands: {{closeCommands}}</div>
+            <div>Open Close Match?: {{openCloseMatch}}</div>
+            <div>Open Close Pairs: {{openClosePairs}}</div>
+            <div>Input Value: {{inputValue}}</div>
+            <div>Status: {{status}}</div>
+            <div>Execute a command:
+                <button v-on:click="LL">LL</button>
+                <button v-on:click="LR">LR</button>
+                <button v-on:click="RL">RL</button>
+                <button v-on:click="RR">RR</button>
+                <button v-on:click="OP">OP</button>
+                <button v-on:click="CL">CL</button>
+                <button v-on:click="GV">GV</button>
+                <button v-on:click="TK">TK</button>
+            </div>
+            <div id="input">Input:
+                <input v-model="inputValue" />
+                <button v-on:click="submitInput">Submit</button>
+            </div>
+            <div id="output">Output: {{output}}</div>
+            <button v-on:click="runProgram">Run</button>
         </div>
         <script>
             
             var app = new Vue({
                 el:"#app",
                 data:{
-                    registers:[99,1,43,2,65,1,5,1],
-                    program:["TK","LR","TK","LL","GV","RL","GV"],
+                    registers:[1,1,1,1,1,1,1,1],
+//                    program:["TK","LR","TK","LL","GV","RL","GV"],
+//                    program:["LR", "TK", "LR", "TK", "LR", "LL", "LL", "LL", "TK", "RR", "LR", "LR", "LR", "TK", "LL", "RL", "OP", "LL", "LL", "RL", "RL", "GV", "LR", "LR", "RR", "RR", "TK", "RL", "CL", "RL", "RL", "RL", "GV"],
+                    program:["LR", "TK", "LR", "TK", "LR", "LL", "LL", "LL", "TK", "RR", "LR", "LR", "LR", "TK", "LL", "RL", "OP", "LL", "LL", "OP", "RL", "RL", "GV", "CL", "LR", "LR", "RR", "RR", "TK", "RL", "CL", "RL", "RL", "RL", "GV"],
                     pointerA:1,
-                    pointerB:3,
-                    currentCommandIndex:0
+                    pointerB:2,
+                    currentCommandIndex:0,
+                    delay:500,
+                    output: [],
+                    status:"loading",
+                    max:999,
+                    min:-999,
+                    inputValue:null
+                },
+                watch:{
+                    status:function(){
+                        if(app.status == "go"){
+                            this.runStep();
+                        }
+                    }  
                 },
                 methods:{
+                    withinRange: function(value){
+                        if(value >= this.max){
+                            return false
+                        }  
+                        else if(value <= this.min){
+                            return false
+                        }
+                        else{
+                            return true
+                        }
+                    },
+                    updateRegister: function(index, value){
+                        this.registers.splice(index, 1, value)
+                    },
+                    runProgram: function(){
+                        this.status = "go"
+                    },
+                    getInput: function(){
+                        this.status = "input"
+                    },
+                    submitInput: function(){
+                        var index = (this.pointerA - 1)
+                        var newValue = Number(this.inputValue)
+                        if(newValue != NaN){
+                            this.inputValue = "";
+                            this.updateRegister(index, newValue);
+                            this.status = "go";
+                        }
+                    },
+                    runStep: function(){
+                        switch(this.currentCommand){
+                            case "LL":
+                                this.LL();
+                                break;
+                            case "LR":
+                                this.LR();
+                                break;
+                            case "RL":
+                                this.RL();
+                                break;
+                            case "RR":
+                                this.RR();
+                                break;
+                            case "OP":
+                                this.OP();
+                                break;
+                            case "CL":
+                                this.CL();
+                                break;
+                            case "GV":
+                                this.GV();
+                                break;
+                            case "TK":
+                                this.TK();
+                                break;                                    
+                        }
+                        this.currentCommandIndex++;
+                        if(this.status != "input"){
+                            this.status="delay";
+                            setTimeout(this.proceed,this.delay);
+                        }
+                    },
+                    proceed: function(){
+                        if(this.currentCommandIndex >= this.programLength){
+                            this.status="done"
+                        }
+                        else if(this.status == "delay"){
+                            this.status = "go"
+                        }
+                    },
                     showUnderline: function(index){
                         if (this.pointerRange.indexOf(index) != -1){
                             return true;
@@ -58,9 +173,173 @@
                         else{
                             return false;
                         }
+                    },
+                    LL: function(){
+                        if(this.pointerA <= 1){
+                            this.pointerA = 1
+                        }
+                        else{
+                            this.pointerA--
+                        }
+                    },
+                    LR: function(){
+                        if(this.pointerA >= this.registryLength){
+                            this.pointerA = this.registryLength;
+                        }
+                        else{
+                            if(this.pointerA == this.pointerB){
+                                this.pointerB++
+                            }
+                            this.pointerA++
+                        }
+                    },
+                    RL: function(){
+                        if(this.pointerB <= 1){
+                            this.pointerB = 1;
+                        }
+                        else{
+                            if(this.pointerA == this.pointerB){
+                                this.pointerA--
+                            }
+                            this.pointerB--
+                        } 
+                    },
+                    RR: function(){
+                        if(this.pointerB >= this.registryLength){
+                            this.pointerB = this.registryLength
+                        }
+                        else{
+                            this.pointerB++
+                        }                  
+                    },
+                    OP: function(){
+                        
+                    },
+                    CL: function(){
+                        
+                    },
+                    GV: function(){
+                        if(this.pointersAreEqual){
+                            this.output.push(this.pointerBValue);
+                        }
+                        else{
+                            var index = (this.pointerA - 1);
+                            var newValue = this.pointerAValue + this.pointerBValue;
+                            if(newValue <= this.min){
+                                this.updateRegister(index, -999);
+                            }
+                            else if(newValue >= this.max){
+                                this.updateRegister(index, 999)
+                            }
+                            else{
+                                this.updateRegister(index, newValue);
+                            }
+                        }
+                    },
+                    TK: function(){
+                        if(this.pointersAreEqual){
+                            this.getInput();
+                        }
+                        else{
+                            var index = (this.pointerA - 1);
+                            var newValue = this.pointerAValue - this.pointerBValue;
+                            if(newValue <= this.min){
+                                this.updateRegister(index, -999);
+                            }
+                            else if(newValue >= this.max){
+                                this.updateRegister(index, 999)
+                            }
+                            else{
+                                this.updateRegister(index, newValue);
+                            }
+                        }
                     }
                 },
                 computed:{
+                    openCommands: function(){
+                        var program = this.program.slice();
+                        var locations = [];
+                        program.forEach(function(item, index){
+                            if (item == "OP"){
+                                locations.push(index);
+                            };                      
+                        });
+                        return locations;
+                    },
+                    openCount: function(){
+                        return this.openCommands.length;
+                    },
+                    closeCommands: function(){
+                        var program = this.program.slice();
+                        var locations = [];
+                        program.forEach(function(item, index){
+                            if (item == "CL"){
+                                locations.push(index);
+                            };                      
+                        });
+                        return locations;
+                    },
+                    closeCount: function(){
+                        return this.closeCommands.length;
+                    },
+                    openCloseMatch: function(){
+                        if(this.openCount == this.closeCount){
+                            return true;
+                        }
+                        else{
+                            return false;
+                        }
+                    },
+                    openCloseCount: function(){
+                        if(this.openCount > this.closeCount){
+                            return this.openCount
+                        }
+                        else{
+                            return this.closeCount
+                        }
+                    },
+                    openClosePairs: function(){
+                        var info = []
+//                        var index = 0
+                        var openCommands = this.openCommands.slice();
+                        var closeCommands = this.closeCommands.slice();
+                        var openCount = this.openCount
+                        console.log(openCommands);
+                        openCommands.forEach(function(item, index){
+                            console.log(index)
+                            info.push([openCommands[openCount - index - 1],closeCommands[index]])
+                        });
+                        return info;
+//                        this.openCommands.forEach(function(){
+//                            var openCommand = app.openCommands
+//                            console.log(openCommand)
+//                            var closeCommand = app.closeCommands
+//                            console.log(closeCommand)
+////                            info.push([app.openCommands[1],app.closeCommands[index]])
+//                        })
+                    },
+                    pointersAreEqual: function(){
+                        if(this.pointerA == this.pointerB){
+                            return true
+                        }
+                        else{
+                            return false
+                        }
+                    },
+                    pointerAValue: function(){
+                        return this.registers[(this.pointerA - 1)]  
+                    },
+                    pointerBValue: function(){
+                        return this.registers[(this.pointerB - 1)]
+                    },
+                    registryLength: function(){
+                        var info = this.registers.slice();
+                        return info.length;  
+                    },
+                    programLength: function(){
+                        var info = this.program.slice();
+                        return info.length;
+                    },
                     currentCommand: function(){
                         return this.program[this.currentCommandIndex];
                     },
@@ -125,6 +404,19 @@
                     }
                 }
             })
+//            app.runProgram();
         </script>
     </body>
 </html>
+
+
+
+
+<!--
+async function demo() {
+  console.log('Taking a break...');
+  await sleep(2000);
+  console.log('Two second later');
+}
+
+demo();-->
