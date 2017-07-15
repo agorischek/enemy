@@ -1,0 +1,130 @@
+<html>
+    <head>
+        <script src="https://unpkg.com/vue"></script>
+        <script   src="https://code.jquery.com/jquery-3.2.1.min.js"   integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="   crossorigin="anonymous"></script>
+        <style>
+            body{
+                font-family: monospace;
+            }
+            #registry li{
+                display:inline-block;
+                font-size: 5em;
+                text-align: center;
+                width: 100px;
+            }
+            .register{
+                border-left:1px solid black;
+            }
+            .pointer{
+                height:4px;
+                width:100%;
+                background-color:black;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="app">
+            <ol id="registry">
+                <li v-for="(register, index) in registers">
+                    <div class="register">{{register}}</div>
+                    <div v-if="showUnderline(index+1)" class="pointer"></div>
+                </li>    
+            </ol>
+            <div>Program: {{program}}</div>
+            <div>Commands: {{commands}}</div>
+            <div>Shorthand: {{shorthand}}</div>
+            <div>Legible: {{legible}}</div>
+            <div>Proper: {{proper}}</div>
+            <div>Pointer Range: {{pointerRange}}</div>
+            <div>Current Command Index: {{currentCommandIndex}}</div>
+            <div>Current Command: {{currentCommand}}</div>
+        </div>
+        <script>
+            
+            var app = new Vue({
+                el:"#app",
+                data:{
+                    registers:[99,1,43,2,65,1,5,1],
+                    program:["TK","LR","TK","LL","GV","RL","GV"],
+                    pointerA:1,
+                    pointerB:3,
+                    currentCommandIndex:0
+                },
+                methods:{
+                    showUnderline: function(index){
+                        if (this.pointerRange.indexOf(index) != -1){
+                            return true;
+                        }
+                        else{
+                            return false;
+                        }
+                    }
+                },
+                computed:{
+                    currentCommand: function(){
+                        return this.program[this.currentCommandIndex];
+                    },
+                    pointerRange: function(){
+                        var info = []
+                        var pointerA = this.pointerA
+                        var pointerB = this.pointerB
+                        while(pointerA <= pointerB){
+                            info.push(pointerA++);
+                        }  
+                        return info;
+                    },
+                    commands: function(){
+                        var info = this.program.slice();
+                        info.forEach(function(item, index){
+                            if (item == "LL") info[index] = "Left-left";
+                            if (item == "LR") info[index] = "Left-right";
+                            if (item == "RL") info[index] = "Right-left";
+                            if (item == "RR") info[index] = "Right-right";
+                            if (item == "OP") info[index] = "Open";
+                            if (item == "CL") info[index] = "Close";
+                            if (item == "GV") info[index] = "Give";
+                            if (item == "TK") info[index] = "Take";                            
+                        });
+                        info = info.join(" ")
+                        return info;
+                    },
+                    shorthand: function(){
+                        var info = this.program.slice();
+                        info = info.join(" ");
+                        return info;
+                    },
+                    legible: function(){
+                        var info = this.program.slice();
+                        info.forEach(function(item, index){
+                            if (item == "LL") info[index] = "mmn";
+                            if (item == "LR") info[index] = "nmm";
+                            if (item == "RL") info[index] = "mnn";
+                            if (item == "RR") info[index] = "nnm";
+                            if (item == "OP") info[index] = "mnm";
+                            if (item == "CL") info[index] = "nmn";
+                            if (item == "GV") info[index] = "mmm";
+                            if (item == "TK") info[index] = "nnn";                            
+                        });
+                        info = info.join(" ")
+                        return info
+                    },
+                    proper: function(){
+                        var info = this.program.slice();
+                        info.forEach(function(item, index){
+                            if (item == "LL") info[index] = "——–";
+                            if (item == "LR") info[index] = "–——";
+                            if (item == "RL") info[index] = "—––";
+                            if (item == "RR") info[index] = "––—";
+                            if (item == "OP") info[index] = "—–—";
+                            if (item == "CL") info[index] = "–—–";
+                            if (item == "GV") info[index] = "———";
+                            if (item == "TK") info[index] = "–––";                            
+                        });
+                        info = info.join("")
+                        return info;
+                    }
+                }
+            })
+        </script>
+    </body>
+</html>
