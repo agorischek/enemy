@@ -8,7 +8,7 @@ It has two unique features: It is dual-pointer (meaning that there are two curso
 
 Enemy's name is derived from its constitution of entirely en and em dashes, as well as the fact that it is not your friend.
 
-# Raison D'être
+## Raison D'être
 
 In the tradition of esoteric languages, Enemy not intended to have practical purpose. Rather, it is intended to push the idea behind the esoteric language BF to its logical extreme: BF might be incredibly difficult to read, but Enemy is literally impossible, as Enemy programs displayed in monospace font are simply continuous lines.
 
@@ -38,7 +38,7 @@ The following details are the core aspects of data management:
 
 – The Left pointer initializes at the first slot, and the Right pointer initializes at the second slot.
 
-# Commands
+## Commands
 
 There are eight commands total:
 
@@ -72,7 +72,7 @@ The below details apply to this particular implementation of Enemy. Other implem
 
 - The output section has an option to either interpret values as numbers or as ASCII.
 
-# Notations
+## Notations
 
 Enemy has four interchangeable notations: Command, Shorthand, Legible, and Proper. All finished Enemy programs should be in Proper form. The other notations can be used for development purposes.
 
@@ -87,6 +87,6 @@ Enemy has four interchangeable notations: Command, Shorthand, Legible, and Prope
 | Give        | GV        | mmm     | ———    |
 | Take        | TK        | nnn     | –––    |
 
-# Turing Completeness
+## Turing Completeness
 
 To my knowledge, Enemy should in theory be Turing Complete, assuming some of the limitations in the Implementation Details section are lifted. However, I do not have formal proof.
