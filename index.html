@@ -68,19 +68,23 @@
             </div>
             <div id="output">Output: {{output}}</div>
             <button v-on:click="runProgram">Run</button>
+            <button v-on:click="stopProgram">Stop</button>
         </div>
         <script>
             
             var app = new Vue({
                 el:"#app",
                 data:{
-                    registers:[1,1,1,1,1,1,1,1],
+                    registers:[1,5,7,1,1,1,1,1],
 //                    program:["TK","LR","TK","LL","GV","RL","GV"],
 //                    program:["LR", "TK", "LR", "TK", "LR", "LL", "LL", "LL", "TK", "RR", "LR", "LR", "LR", "TK", "LL", "RL", "OP", "LL", "LL", "RL", "RL", "GV", "LR", "LR", "RR", "RR", "TK", "RL", "CL", "RL", "RL", "RL", "GV"],
-                    program:["LR", "TK", "LR", "TK", "LR", "LL", "LL", "LL", "TK", "RR", "LR", "LR", "LR", "TK", "LL", "RL", "OP", "LL", "LL", "OP", "RL", "RL", "GV", "CL", "LR", "LR", "RR", "RR", "TK", "RL", "CL", "RL", "RL", "RL", "GV"],
+//                    program:["LR", "TK", "LR", "TK", "LR", "LL", "LL", "LL", "TK", "RR", "LR", "LR", "LR", "TK", "LL", "RL", "OP", "LL", "LL", "OP", "RL", "RL", "GV", "CL", "LR", "LR", "RR", "RR", "TK", "RL", "CL", "RL", "RL", "RL", "GV"],
+//                    program:["OP", "OP", "CL", "CL"],
+//                    program:["OP","CL"],
+                    program:["LR", "LR", "LR", "LL", "LL", "LL", "TK", "RR", "LR", "LR", "LR", "TK", "LL", "RL", "OP", "LL", "LL", "RL", "RL", "GV", "LR", "LR", "RR", "RR", "TK", "RL", "CL", "RL", "RL", "RL", "GV"],
                     pointerA:1,
                     pointerB:2,
-                    currentCommandIndex:0,
+                    currentCommandIndex:-1,
                     delay:500,
                     output: [],
                     status:"loading",
@@ -91,7 +95,7 @@
                 watch:{
                     status:function(){
                         if(app.status == "go"){
-                            this.runStep();
+                            this.nextStep();
                         }
                     }  
                 },
@@ -113,6 +117,9 @@
                     runProgram: function(){
                         this.status = "go"
                     },
+                    stopProgram: function(){
+                        this.status = "stop"
+                    },
                     getInput: function(){
                         this.status = "input"
                     },
@@ -125,7 +132,8 @@
                             this.status = "go";
                         }
                     },
-                    runStep: function(){
+                    nextStep: function(){
+                        this.currentCommandIndex++;
                         switch(this.currentCommand){
                             case "LL":
                                 this.LL();
@@ -152,7 +160,6 @@
                                 this.TK();
                                 break;                                    
                         }
-                        this.currentCommandIndex++;
                         if(this.status != "input"){
                             this.status="delay";
                             setTimeout(this.proceed,this.delay);
@@ -213,10 +220,25 @@
                         }                  
                     },
                     OP: function(){
-                        
+//                        console.log("Executing OP command")
+                        var matchingClose = this.openClosePairs.open[this.currentCommandIndex];
+                        var jumpTo = matchingClose + 1
+//                        console.log("The matching close was identified as " + matchingClose);
+                        if(this.pointersAreEqual){
+                            this.currentCommandIndex = jumpTo
+                        }
+                        else if(this.pointerAValue == this.pointerBValue){
+                            this.currentCommandIndex = jumpTo
+                        }
                     },
                     CL: function(){
-                        
+//                        console.log("Executing CL command")
+                        var matchingOpen = this.openClosePairs.close[this.currentCommandIndex];
+                        var jumpTo = matchingOpen - 1
+//                        console.log("The matching close was identified as " + matchingOpen);
+                        if(this.pointerAValue != this.pointerBValue){
+                            this.currentCommandIndex = jumpTo
+                        }
                     },
                     GV: function(){
                         if(this.pointersAreEqual){
@@ -299,24 +321,21 @@
                         }
                     },
                     openClosePairs: function(){
-                        var info = []
+                        var openInfo = {};
+                        var closeInfo = {};
 //                        var index = 0
                         var openCommands = this.openCommands.slice();
                         var closeCommands = this.closeCommands.slice();
                         var openCount = this.openCount
-                        console.log(openCommands);
+//                        console.log(openCommands);
                         openCommands.forEach(function(item, index){
-                            console.log(index)
-                            info.push([openCommands[openCount - index - 1],closeCommands[index]])
+                            openInfo[openCommands[openCount - index - 1]] = closeCommands[index];
+                            closeInfo[closeCommands[index]] = openCommands[openCount - index - 1];
                         });
-                        return info;
-//                        this.openCommands.forEach(function(){
-//                            var openCommand = app.openCommands
-//                            console.log(openCommand)
-//                            var closeCommand = app.closeCommands
-//                            console.log(closeCommand)
-////                            info.push([app.openCommands[1],app.closeCommands[index]])
-//                        })
+                        return {
+                            open: openInfo,
+                            close: closeInfo
+                        };
                     },
                     pointersAreEqual: function(){
                         if(this.pointerA == this.pointerB){
