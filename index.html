@@ -6,11 +6,44 @@
             body{
                 font-family: monospace;
             }
+            #registry{
+                margin:50px 0px;
+            }
             #registry li{
                 display:inline-block;
                 font-size: 3em;
                 text-align: center;
                 width: 100px;
+            }
+            #program{
+                margin:30px 0px;
+                text-align: center;
+            }
+            #program li{
+                display:inline-block;
+                font-size: 1em;
+                width:30px;
+                text-align: center;
+/*                height:100px;*/
+/*                background-color:yellow;*/
+/*                margin:2px;*/
+            }
+            #input{
+/*                color:darkorange;*/
+                background-color:aqua;
+                display:inline-block;
+                padding:20px;
+                border:2px solid black;
+                margin: 20px auto;
+            }
+            input{
+                min-width:100px;
+                background-color:white;
+                border:2px solid black;
+                height:40px;
+                font-family: monospace;
+                font-size:1em;
+                padding:0px 10px;
             }
             .register{
 /*                border-left:1px solid black;*/
@@ -20,86 +53,189 @@
                 width:100%;
                 background-color:black;
             }
+            .marker-holder{
+                height:20px;
+                display:block;
+                padding:6px
+            }
+            .marker{
+                width:6px;
+                height:6px;
+                background-color:black;
+                text-align: center;
+                margin: 0px auto;
+            }
+            button{
+                min-width:100px;
+                background-color:white;
+                border:2px solid black;
+                height:40px;
+                font-family: monospace;
+                font-size:1em;
+                margin:5px 0px 5px 20px;
+            }
+            #submit-button{
+                margin-left:0px;
+            }
+            ol{
+                margin:0px;
+                padding:0px;
+            }
+            #content{
+                border:3px solid black;
+                margin:50px;
+                padding:50px;
+                text-align: center;
+            }
+            h1{
+                margin:0;
+                padding:0;
+            }
+            #output{
+                background-color:whitesmoke;
+                font-size:2em;
+                min-height:30px;
+                padding:20px;
+                display:block;
+                min-width:500px;
+                display:inline-block;
+                margin:30px;
+            }
+            #edit{
+                margin:30px 0px 0px 0px;
+                min-width:1000px;
+                min-height:250px;
+                padding:20px;
+            }
         </style>
     </head>
     <body>
         <div id="app">
-            <ol id="registry">
-                <li v-for="(register, index) in registers">
-                    <div class="register">{{register}}</div>
-                    <div v-if="showUnderline(index+1)" class="pointer"></div>
-                </li>    
-            </ol>
-            <div>Registers: {{registers}}</div>
-            <div>Program: {{program}}</div>
-            <div>Commands: {{commands}}</div>
-            <div>Shorthand: {{shorthand}}</div>
-            <div>Legible: {{legible}}</div>
-            <div>Proper: {{proper}}</div>
-            <div>Pointer Range: {{pointerRange}}</div>
-            <div>Pointer A: {{pointerA}}</div>
-            <div>Pointer A Value: {{pointerAValue}}</div>
-            <div>Pointer B: {{pointerB}}</div>
-            <div>Pointer B Value: {{pointerBValue}}</div>
-            <div>Pointers Are Equal?: {{pointersAreEqual}}</div>
-            <div>Current Command Index: {{currentCommandIndex}}</div>
-            <div>Current Command: {{currentCommand}}</div>
-            <div>Registry Length: {{registryLength}}</div>
-            <div>Program Length: {{programLength}}</div>
-            <div>Open Commands: {{openCommands}}</div>
-            <div>Close Commands: {{closeCommands}}</div>
-            <div>Open Close Match?: {{openCloseMatch}}</div>
-            <div>Open Close Pairs: {{openClosePairs}}</div>
-            <div>Input Value: {{inputValue}}</div>
-            <div>Status: {{status}}</div>
-            <div>Execute a command:
-                <button v-on:click="LL">LL</button>
-                <button v-on:click="LR">LR</button>
-                <button v-on:click="RL">RL</button>
-                <button v-on:click="RR">RR</button>
-                <button v-on:click="OP">OP</button>
-                <button v-on:click="CL">CL</button>
-                <button v-on:click="GV">GV</button>
-                <button v-on:click="TK">TK</button>
+            <div id="content">
+                <h1>Enemy Language</h1>
+                <ol id="registry">
+                    <li v-for="(register, index) in registers">
+                        <div class="register">{{register}}</div>
+                        <div v-if="showUnderline(index+1)" class="pointer"></div>
+                    </li>    
+                </ol>
+                <ol v-if="readableCode" id="program">
+                    <li v-for="(command, index) in program">
+                        <div>{{shorthand[index]}}</div>
+                        <div>{{legible[index]}}</div>
+                        <div>{{proper[index]}}</div>
+                        <div class="marker-holder">
+                            <div v-if="currentCommandIndex==index" class="marker"></div>
+                        </div>
+                    </li>    
+                </ol>
+                <button v-on:click="runProgram">Run</button>
+                <button v-on:click="pauseProgram">Pause</button>
+                <button v-on:click="reset">Reset</button>
+                <button v-if="!readableCode" v-on:click="readableCode=true">Reveal</button>
+                <button v-if="readableCode" v-on:click="readableCode=false">Hide</button>
+                <div id="input-holder">
+                    <div v-if="status=='input'" id="input">Provide input:
+                        <input id="input-box" v-model="inputValue" />
+                        <button id="submit-button" v-on:click="submitInput">Submit</button>
+                    </div>
+                </div>
+                <div id="edit-holder">
+                    <textarea v-model="edit" id="edit"></textarea>
+                </div>
+                <div id="output-holder">
+                    <div id="output">{{outputFormatted}}</div>
+                </div>
+<!--                    <div>Parsed input: {{editParsed}}</div>-->
+    <!--            <div>Registers: {{registers}}</div>-->
+    <!--            <div>Program: {{program}}</div>-->
+    <!--            <div>Commands: {{commands}}</div>-->
+    <!--            <div>Shorthand: {{shorthand}}</div>-->
+    <!--            <div>Legible: {{legible}}</div>-->
+    <!--            <div>Proper: {{proper}}</div>-->
+    <!--            <div>Pointer Range: {{pointerRange}}</div>-->
+    <!--            <div>Pointer A: {{pointerA}}</div>-->
+    <!--            <div>Pointer A Value: {{pointerAValue}}</div>-->
+    <!--            <div>Pointer B: {{pointerB}}</div>-->
+    <!--            <div>Pointer B Value: {{pointerBValue}}</div>-->
+    <!--            <div>Pointers Are Equal?: {{pointersAreEqual}}</div>-->
+<!--                <div>Current Command Index: {{currentCommandIndex}}</div>-->
+<!--                <div>Current Command: {{currentCommand}}</div>-->
+    <!--            <div>Registry Length: {{registryLength}}</div>-->
+    <!--            <div>Program Length: {{programLength}}</div>-->
+    <!--            <div>Open Commands: {{openCommands}}</div>-->
+    <!--            <div>Close Commands: {{closeCommands}}</div>-->
+    <!--            <div>Open Close Match?: {{openCloseMatch}}</div>-->
+    <!--            <div>Open Close Pairs: {{openClosePairs}}</div>-->
+    <!--            <div>Input Value: {{inputValue}}</div>-->
+<!--                <div>Status: {{status}}</div>-->
+    <!--
+                <div>Execute a command:
+                    <button v-on:click="LL">LL</button>
+                    <button v-on:click="LR">LR</button>
+                    <button v-on:click="RL">RL</button>
+                    <button v-on:click="RR">RR</button>
+                    <button v-on:click="OP">OP</button>
+                    <button v-on:click="CL">CL</button>
+                    <button v-on:click="GV">GV</button>
+                    <button v-on:click="TK">TK</button>
+                </div>
+    --> 
+<!--                <div>Output: {{output}}</div>-->
             </div>
-            <div id="input">Input:
-                <input v-model="inputValue" />
-                <button v-on:click="submitInput">Submit</button>
-            </div>
-            <div id="output">Output: {{output}}</div>
-            <button v-on:click="runProgram">Run</button>
-            <button v-on:click="stopProgram">Stop</button>
         </div>
         <script>
             
             var app = new Vue({
                 el:"#app",
                 data:{
-                    registers:[1,5,7,1,1,1,1,1],
-//                    program:["TK","LR","TK","LL","GV","RL","GV"],
+                    registers:[1,1,1,1,1,1,1,1],
+//                    program:["RL","GV"],
+//                    program:["RL","TK","LR","TK","LL","GV","RL","GV"],
 //                    program:["LR", "TK", "LR", "TK", "LR", "LL", "LL", "LL", "TK", "RR", "LR", "LR", "LR", "TK", "LL", "RL", "OP", "LL", "LL", "RL", "RL", "GV", "LR", "LR", "RR", "RR", "TK", "RL", "CL", "RL", "RL", "RL", "GV"],
 //                    program:["LR", "TK", "LR", "TK", "LR", "LL", "LL", "LL", "TK", "RR", "LR", "LR", "LR", "TK", "LL", "RL", "OP", "LL", "LL", "OP", "RL", "RL", "GV", "CL", "LR", "LR", "RR", "RR", "TK", "RL", "CL", "RL", "RL", "RL", "GV"],
 //                    program:["OP", "OP", "CL", "CL"],
 //                    program:["OP","CL"],
-                    program:["LR", "LR", "LR", "LL", "LL", "LL", "TK", "RR", "LR", "LR", "LR", "TK", "LL", "RL", "OP", "LL", "LL", "RL", "RL", "GV", "LR", "LR", "RR", "RR", "TK", "RL", "CL", "RL", "RL", "RL", "GV"],
+//                    program:["OP", "LR","LR", "LL", "LL", "LL", "TK", "RR", "LR", "LR", "LR", "LL", "OP", "LL", "LL", "RL", "RL", "GV", "LR", "LR", "RR","CL", "RR", "RL", "CL", "RL", "RL", "RL", "GV"],
                     pointerA:1,
                     pointerB:2,
                     currentCommandIndex:-1,
-                    delay:500,
+                    delay:300,
                     output: [],
                     status:"loading",
                     max:999,
                     min:-999,
-                    inputValue:null
+                    inputValue:null,
+                    edit:"",
+                    readableCode:false,
+                    default:{
+                        registers:[1,1,1,1,1,1,1,1],
+                        pointerA:1,
+                        pointerB:2,
+                        status:"stop",
+                        output:[],
+                        currentCommandIndex:-1
+                    }
                 },
                 watch:{
-                    status:function(){
+                    status: function(){
                         if(app.status == "go"){
                             this.nextStep();
                         }
-                    }  
+                    },
+//                    editParsed: function(){
+//                        this.program = this.editParsed.slice();
+//                    }
                 },
                 methods:{
+                    reset: function(){
+                        this.currentCommandIndex = this.default.currentCommandIndex;
+                        this.registers = this.default.registers.slice();
+                        this.pointerA = this.default.pointerA;
+                        this.pointerB = this.default.pointerB;
+                        this.status = this.default.status;
+                        this.output = this.default.output.slice();
+                    },
                     withinRange: function(value){
                         if(value >= this.max){
                             return false
@@ -115,13 +251,15 @@
                         this.registers.splice(index, 1, value)
                     },
                     runProgram: function(){
+                        this.reset();
                         this.status = "go"
                     },
-                    stopProgram: function(){
-                        this.status = "stop"
+                    pauseProgram: function(){
+                        this.status = "pause"
                     },
                     getInput: function(){
                         this.status = "input"
+                        $("#input-box").focus();
                     },
                     submitInput: function(){
                         var index = (this.pointerA - 1)
@@ -133,7 +271,6 @@
                         }
                     },
                     nextStep: function(){
-                        this.currentCommandIndex++;
                         switch(this.currentCommand){
                             case "LL":
                                 this.LL();
@@ -160,6 +297,7 @@
                                 this.TK();
                                 break;                                    
                         }
+                        this.currentCommandIndex++;
                         if(this.status != "input"){
                             this.status="delay";
                             setTimeout(this.proceed,this.delay);
@@ -248,10 +386,10 @@
                             var index = (this.pointerA - 1);
                             var newValue = this.pointerAValue + this.pointerBValue;
                             if(newValue <= this.min){
-                                this.updateRegister(index, -999);
+                                this.updateRegister(index, this.min);
                             }
                             else if(newValue >= this.max){
-                                this.updateRegister(index, 999)
+                                this.updateRegister(index, this.max)
                             }
                             else{
                                 this.updateRegister(index, newValue);
@@ -266,10 +404,10 @@
                             var index = (this.pointerA - 1);
                             var newValue = this.pointerAValue - this.pointerBValue;
                             if(newValue <= this.min){
-                                this.updateRegister(index, -999);
+                                this.updateRegister(index, this.min);
                             }
                             else if(newValue >= this.max){
-                                this.updateRegister(index, 999)
+                                this.updateRegister(index, this.max)
                             }
                             else{
                                 this.updateRegister(index, newValue);
@@ -278,6 +416,35 @@
                     }
                 },
                 computed:{
+                    program: function(){
+                        if(this.editParsed){
+                            return this.editParsed.slice();
+                        }
+                        else{
+                            return null;
+                        }
+                    },
+                    editParsed: function(){
+                        var info = [];
+//                        info = this.edit.match(/.{1,3}/g);
+                        info = this.edit.match(/.{3}/g);
+                        if(info){
+                            info.forEach(function(item, index){
+                                if (item == "——–") info[index] = "LL";
+                                if (item == "–——") info[index] = "LR";
+                                if (item == "—––") info[index] = "RL";
+                                if (item == "––—") info[index] = "RR";
+                                if (item == "—–—") info[index] = "OP";
+                                if (item == "–—–") info[index] = "CL";
+                                if (item == "———") info[index] = "GV";
+                                if (item == "–––") info[index] = "TK";                            
+                            });
+                        }
+                        return info;
+                    },
+                    outputFormatted: function(){
+                        return this.output.join("");  
+                    },
                     openCommands: function(){
                         var program = this.program.slice();
                         var locations = [];
@@ -388,7 +555,7 @@
                     },
                     shorthand: function(){
                         var info = this.program.slice();
-                        info = info.join(" ");
+//                        info = info.join(" ");
                         return info;
                     },
                     legible: function(){
@@ -403,7 +570,7 @@
                             if (item == "GV") info[index] = "mmm";
                             if (item == "TK") info[index] = "nnn";                            
                         });
-                        info = info.join(" ")
+//                        info = info.join(" ")
                         return info
                     },
                     proper: function(){
@@ -418,7 +585,7 @@
                             if (item == "GV") info[index] = "———";
                             if (item == "TK") info[index] = "–––";                            
                         });
-                        info = info.join("")
+//                        info = info.join("")
                         return info;
                     }
                 }
