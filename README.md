@@ -36,7 +36,7 @@ The following details are the core aspects of data management:
 
 - If both pointers are at the same location, attempting to make the underline shorter in either direction will result in the underline moving.
 
-– The Left pointer initializes at the first slot, and the Right pointer initializes at the second slot.
+- The Left pointer initializes at the first slot, and the Right pointer initializes at the second slot.
 
 ## Commands
 
