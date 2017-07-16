@@ -357,10 +357,8 @@
                         }                  
                     },
                     OP: function(){
-//                        console.log("Executing OP command")
                         var matchingClose = this.openClosePairs.open[this.currentCommandIndex];
                         var jumpTo = matchingClose + 1
-//                        console.log("The matching close was identified as " + matchingClose);
                         if(this.pointersAreEqual){
                             this.currentCommandIndex = jumpTo
                         }
@@ -369,10 +367,8 @@
                         }
                     },
                     CL: function(){
-//                        console.log("Executing CL command")
                         var matchingOpen = this.openClosePairs.close[this.currentCommandIndex];
                         var jumpTo = matchingOpen - 1
-//                        console.log("The matching close was identified as " + matchingOpen);
                         if(this.pointerAValue != this.pointerBValue){
                             this.currentCommandIndex = jumpTo
                         }
