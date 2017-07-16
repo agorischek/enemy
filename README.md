@@ -74,9 +74,9 @@ The below details apply to this particular implementation of Enemy. Other implem
 
 ## Notations
 
-Enemy has four interchangeable notations: Command, Shorthand, Legible, and Proper. All finished Enemy programs should be in Proper form. The other notations can be used for development purposes.
+Enemy has four interchangeable notations: Verbose, Shorthand, Legible, and Proper. All finished Enemy programs should be in Proper form. The other notations can be used for development purposes.
 
-| Command     | Shorthand | Legible | Proper |
+| Verbose     | Shorthand | Legible | Proper |
 |-------------|-----------|---------|--------|
 | Left-left   | LL        | mmn     | ——–    |
 | Left-right  | LR        | nmm     | –——    |
