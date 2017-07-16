@@ -413,11 +413,16 @@
                 },
                 computed:{
                     program: function(){
-                        if(this.editParsed){
-                            return this.editParsed.slice();
+                        if(this.defaultProgram == "edit"){
+                            if(this.editParsed){
+                                return this.editParsed.slice();
+                            }
+                            else{
+                                return null;
+                            }
                         }
                         else{
-                            return null;
+                            return this.programs[this.defaultProgram];
                         }
                     },
                     editParsed: function(){
