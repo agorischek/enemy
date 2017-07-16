@@ -519,13 +519,13 @@
                         var openInfo = {};
                         var closeInfo = {};
 //                        var index = 0
-                        var openCommands = this.openCommands.slice();
-                        var closeCommands = this.closeCommands.slice();
+                        var openCloseMatches = this.openCloseMatches.slice();
+//                        var closeCommands = this.closeCommands.slice();
                         var openCount = this.openCount
 //                        console.log(openCommands);
-                        openCommands.forEach(function(item, index){
-                            openInfo[openCommands[openCount - index - 1]] = closeCommands[index];
-                            closeInfo[closeCommands[index]] = openCommands[openCount - index - 1];
+                        openCloseMatches.forEach(function(item, index){
+                            openInfo[openCloseMatches[index][0]] = openCloseMatches[index][1];
+                            closeInfo[openCloseMatches[index][1]] = openCloseMatches[index][0];
                         });
                         return {
                             open: openInfo,
