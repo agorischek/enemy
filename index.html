@@ -446,6 +446,33 @@
                     outputFormatted: function(){
                         return this.output.join("");  
                     },
+                    openCloseMatches: function(){
+                        var info = this.program.slice();
+                        var matches = [];
+                        info.forEach(function(item, index){
+                            if(item == "OP"){
+                                var openIndex = index;
+                                var depth = 0
+                                var matchFound = false
+                                info.forEach(function(subitem, subindex){
+                                    if(matchFound == false && subindex > openIndex){
+                                        if(subitem == "CL" && depth == 0){
+                                            var closeIndex = subindex
+                                            matches.push([openIndex,closeIndex])
+                                            matchFound = true;
+                                        }
+                                        else if(subitem == "CL"){
+                                            depth = depth - 1
+                                        }
+                                        else if(subitem == "OP"){
+                                            depth = depth + 1
+                                        }
+                                    }
+                                })
+                            }
+                        })
+                        return matches;
+                    },
                     openCommands: function(){
                         var program = this.program.slice();
                         var locations = [];
