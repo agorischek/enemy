@@ -146,6 +146,23 @@ var app = new Vue({
         },
     },
     computed:{
+        displayStatus: function(){
+            if(this.status == "go" || this.status == "delay"){  
+                return "Running";
+            }
+            else if(this.status == "done"){
+                return "Done";
+            }
+            else if(this.status == "pause" || this.status == "step"){
+                return "Pause";
+            }
+            else if(this.status == "stop"){
+                return "Ready";
+            }
+            else{
+                return this.status
+            }
+        },
         parseEditAs: function(){
             var firstChar = this.edit.charAt(0).toLowerCase();
             var notation = ""
