@@ -82,6 +82,56 @@
                 </div>
                 <div id="edit-section">
                     <textarea id="edit" v-model="edit" class="uk-textarea"></textarea>
+                   <ol id="commands">
+                        <li class="command">
+                            <span class="command-name">Left-left: </span>
+                            <span class="em">—</span>
+                            <span class="em">—</span>
+                            <span class="en">–</span>
+                       </li>
+                       <li class="command">
+                            <span class="command-name">Left-right: </span>
+                           <span class="en">–</span>
+                           <span class="em">—</span>
+                           <span class="em">—</span>
+                       </li>
+                        <li class="command">
+                            <span class="command-name">Right-left: </span>
+                            <span class="em">—</span>
+                            <span class="en">–</span>
+                            <span class="en">–</span>
+                       </li>
+                       <li class="command">
+                            <span class="command-name">Right-right:</span>
+                           <span class="en">–</span>
+                           <span class="en">–</span>
+                           <span class="em">—</span>
+                       </li>
+                        <li class="command">
+                            <span class="command-name">Open:</span>
+                            <span class="em">—</span>
+                            <span class="en">–</span>
+                            <span class="em">—</span>
+                       </li>
+                       <li class="command">
+                            <span class="command-name">Close:</span>
+                           <span class="en">–</span>
+                           <span class="em">—</span>
+                           <span class="en">–</span>
+                       </li>
+                        <li class="command">
+                            <span class="command-name">Give:</span>
+                            <span class="em">—</span>
+                            <span class="em">—</span>
+                            <span class="em">—</span>
+                       </li>
+                       <li class="command">
+                            <span class="command-name">Take: </span>
+                           <span class="en">–</span>
+                           <span class="en">–</span>
+                           <span class="en">–</span>
+                       </li>
+                    </ol>
                     <ol id="insert">
                         <span>Insert: </span>
                         <li class="built-in uk-link" v-for="program in programs" v-on:click="insertProgram(processBuiltInProgram(program.code))">{{program.name}}</li>

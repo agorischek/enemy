@@ -216,3 +216,19 @@ a{
     margin:0 10px;
     color: #81D6CF;
 }
+#commands{
+    padding:0;
+    text-align: center;
+}
+.command{
+    display:inline-block;
+    font-size: 105%;
+    margin: 0 10px;
+}
+.command-name{
+    font-size:65%;
+    color:#999999;
+}
+.em{
+    color:#81D6CF;
+}
