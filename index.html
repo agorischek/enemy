@@ -30,8 +30,8 @@
                         </div>
                     </li>    
                 </ol>
-                <button v-on:click="runProgram">Run</button>
-                <button v-on:click="pauseProgram">Pause</button>
+                <button v-if="status!='go' && status!='delay' " v-on:click="runProgram">Run</button>
+                <button v-if="status=='go' || status=='delay'" v-on:click="pauseProgram">Pause</button>
                 <button v-on:click="reset">Reset</button>
                 <button v-if="!readableCode" v-on:click="readableCode=true">Reveal</button>
                 <button v-if="readableCode" v-on:click="readableCode=false">Hide</button>
