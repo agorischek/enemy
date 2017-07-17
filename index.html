@@ -63,7 +63,7 @@
                     </div>
                     <div id="input-and-button-holder">
                         <span id="input-and-button" v-if="status=='input'">
-                            <input id="input" v-model="inputValue" class="uk-input">
+                            <input v-on:keyup.enter="submitInput" id="input" v-model="inputValue" class="uk-input">
                             <button v-on:click="submitInput" id="submit" class="uk-button uk-button-default">Submit</button>
                         </span>
                     </div>
