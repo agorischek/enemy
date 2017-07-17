@@ -6,7 +6,7 @@ var app = new Vue({
             pointerA:1,
             pointerB:2,
             status:"stop",
-            output:[],
+            output:[">", " "],
             currentCommandIndex:-1
         },
         delay: settings.delay,
@@ -32,12 +32,28 @@ var app = new Vue({
             if(app.status == "go" || app.status == "step"){
                 this.nextStep();
             }
+            else if(app.status == "input"){
+                $("#input").focus();
+                console.log("Trying to set focus")
+            }
         },
         program: function(){
             this.reset();
         }
     },
     methods:{
+        insertProgram: function(program){
+            app.edit = program;
+        },
+        processBuiltInProgram: function(program){
+            var info = program.slice();
+            var map = this.shorthandToProper;
+            info.forEach(function(item, index){
+                info[index] = map[item]                         
+            });
+            info = info.join("")
+            return info;
+        },
         step: function(){
             app.status = "step";
         },
@@ -87,6 +103,12 @@ var app = new Vue({
             var index = (this.pointerA - 1)
             var newValue = Number(this.inputValue)
             if(newValue != NaN){
+                if(newValue > this.max){
+                    newValue = this.max;
+                }
+                else if(newValue < this.min){
+                    newValue = this.min;
+                }
                 this.inputValue = "";
                 this.updateRegister(index, newValue);
                 this.status = "go";
@@ -154,10 +176,13 @@ var app = new Vue({
                 return "Done";
             }
             else if(this.status == "pause" || this.status == "step"){
-                return "Pause";
+                return "Paused";
             }
             else if(this.status == "stop"){
                 return "Ready";
+            }
+            else if(this.status == "input"){
+                return "Waiting for input...";
             }
             else{
                 return this.status
@@ -178,16 +203,11 @@ var app = new Vue({
             return notation;
         },
         program: function(){
-            if(this.defaultProgram == "edit"){
-                if(this.editParsed){
-                    return this.editParsed.slice();
-                }
-                else{
-                    return null;
-                }
+            if(this.editParsed){
+                return this.editParsed.slice();
             }
             else{
-                return this.programs[this.defaultProgram];
+                return null;
             }
         },
         editParsed: function(){

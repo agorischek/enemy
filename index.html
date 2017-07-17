@@ -7,46 +7,94 @@
         <script src="commands-min.js" type="text/javascript"></script>
         <script src="command-map-min.js" type="text/javascript"></script>
         <script src="settings-min.js" type="text/javascript"></script>
-        <link rel="stylesheet" type="text/css" href="styles.css">
         <title>Enemy Language</title>
+        <link rel="stylesheet" href="libs/uikit-3/css/uikit.min.css">
+        <link rel="stylesheet" href="fonts.css">
+        <link rel="stylesheet" href="styles-min.css">
+        <script src="libs/uikit-3/js/uikit.min.js"></script>
+        <script src="libs/uikit-3/js/uikit-icons.min.js"></script>
     </head>
     <body>
         <div id="app">
-            <div id="content">
-                <h1>Enemy Language</h1>
-                <ol id="registry">
-                    <li v-for="(register, index) in registers">
-                        <div class="register">{{register}}</div>
-                        <div v-if="showUnderline(index+1)" class="pointer"></div>
-                    </li>    
-                </ol>
-                <ol v-if="readableCode" id="program">
-                    <li v-for="(command, index) in program">
-                        <div>{{shorthand[index]}}</div>
-                        <div>{{legible[index]}}</div>
-                        <div>{{proper[index]}}</div>
-                        <div class="marker-holder">
-                            <div v-if="currentCommandIndex==index" class="marker"></div>
+            <div class="uk-container">
+                <div id="nav">
+                    <h1 id="logo-holder">
+                        <img id="logo" src="wordmark.png" alt="Enemy">
+                    </h1>
+                    <ul class="uk-align-right uk-list" id="links">
+                        <li><a target="_blank" href="https://github.com/agorischek/enemy">Reference</a></li>
+<!--                        <li><a target="_blank" href="https://github.com/agorischek/enemy">Source</a></li>-->
+                    </ul>
+                </div>
+                <div id="registry">
+                    <div v-for="(register, index) in registers">
+                        <div class="slot">{{register}}</div>
+                        <div class="pointer-holder">
+                            <div class="pointer pointer-left">
+                                <div v-if="showUnderline(index)&&showUnderline(index+1)" class="pointer-fill"></div>
+                            </div>
+                            <div class="pointer pointer-center">
+                                <div v-if="showUnderline(index+1)" class="pointer-fill"></div>
+                            </div>
+                            <div class="pointer pointer-right">
+                                <div v-if="showUnderline(index+1)&&showUnderline(index+2)" class="pointer-fill"></div>
+                            </div>
                         </div>
-                    </li>    
-                </ol>
-                <button v-if="status!='go' && status!='delay' " v-on:click="runProgram">Run</button>
-                <button v-if="status=='go' || status=='delay'" v-on:click="pauseProgram">Pause</button>
-                <button v-on:click="reset">Reset</button>
-                <button v-on:click="step">Step</button>
-                <button v-if="!readableCode" v-on:click="readableCode=true">Reveal</button>
-                <button v-if="readableCode" v-on:click="readableCode=false">Hide</button>
-                <div id="input-holder">
-                    <div v-if="status=='input'" id="input">Provide input:
-                        <input id="input-box" v-model="inputValue" />
-                        <button id="submit-button" v-on:click="submitInput">Submit</button>
+                    </div>    
+                </div>
+                <div id="status-bar">
+                    <div>Status: <span id="display-status">{{displayStatus}}</span></div>
+                    <div id="delay">
+                        <span>Delay:</span>
+                        <span id="delay-slider-holder">
+                            <input id="delay-slider" v-model="delay" class="uk-range" type="range" min="1" max="999">
+                        </span>
+                        <span id="delay-ms">{{delay}}</span>
                     </div>
                 </div>
-                <div id="edit-holder">
-                    <textarea v-model="edit" id="edit"></textarea>
+                <div id="control-bar">
+                    <div>
+                        <button class="uk-button uk-button-default" v-if="status!='go' && status!='delay' " v-on:click="runProgram">Run</button>
+                        <button class="uk-button uk-button-default" v-if="status=='go' || status=='delay'" v-on:click="pauseProgram">Pause</button>
+                        <button class="uk-button uk-button-default" v-on:click="reset">Reset</button>
+                        <button class="uk-button uk-button-default" v-on:click="step">Step</button>
+                        <button class="uk-button uk-button-default" v-if="!readableCode" v-on:click="readableCode=true">Reveal</button>
+                        <button class="uk-button uk-button-default" v-if="readableCode" v-on:click="readableCode=false">Hide</button>
+                    </div>
+                    <div id="input-and-button-holder">
+                        <span id="input-and-button" v-if="status=='input'">
+                            <input id="input" v-model="inputValue" class="uk-input">
+                            <button v-on:click="submitInput" id="submit" class="uk-button uk-button-default">Submit</button>
+                        </span>
+                    </div>
                 </div>
-                <div id="output-holder">
+                <div id="program">
+                    <ol v-if="readableCode" id="program">
+                        <li v-for="(command, index) in program">
+                            <div>{{shorthand[index]}}</div>
+                            <div>{{legible[index]}}</div>
+                            <div>{{proper[index]}}</div>
+                            <div class="marker-holder">
+                                <div v-if="currentCommandIndex==index" class="marker"></div>
+                            </div>
+                        </li>    
+                    </ol>
+                </div>
+                <div id="edit-section">
+                    <textarea id="edit" v-model="edit" class="uk-textarea"></textarea>
+                    <ol id="insert">
+                        <span>Insert: </span>
+                        <li class="built-in uk-link" v-for="program in programs" v-on:click="insertProgram(processBuiltInProgram(program.code))">{{program.name}}</li>
+                    </ol>
+                </div>
+                <div id="output-section">
                     <div id="output">{{outputFormatted}}</div>
+                </div>
+                <div id="explanation-section" class="uk-align-center">
+                    <p>Enemy is a low-level, minimal, experimental, esoteric programming language. It has two unique features: It is dual-pointer, meaning that there are two cursors pointing to memory slots at all times, and it is written entirely with en and em dashes. Enemy's name is derived from its sole two characters, as well as the fact that it is not your friend.</p>
+                </div>
+                <div id="footer">
+                    <a target="_blank" href="https://twitter.com/alexgorischek">@alexgorischek</a>
                 </div>
             </div>
         </div>

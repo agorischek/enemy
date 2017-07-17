@@ -1,1 +1,1 @@
-settings={delay:100,max:999,min:-999,defaultProgram:"edit"};
+settings={delay:100,max:999,min:-999,defaultProgram:"fibonacci"};
