@@ -63,7 +63,12 @@ var app = new Vue({
             this.registers.splice(index, 1, value)
         },
         runProgram: function(){
-            this.status = "go"
+            if(this.program){
+                this.status = "go"
+            }
+            else{
+                this.status = "done"
+            }
         },
         pauseProgram: function(){
             this.status = "pause"
