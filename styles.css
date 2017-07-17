@@ -10,6 +10,7 @@ body, h1, h2, h3, h4, h5, h6{
 }
 nav{
     margin:0 0 0 25px;
+    text-align: center;
 }
 #links li{
     display: inline-block;
@@ -133,6 +134,9 @@ a{
 #footer{
     font-size: 85%;
     text-align: center;
+}
+#footer a{
+    margin:0 10px;
 }
 #program{
     margin:33px 0 0 0;
