@@ -33,6 +33,9 @@ var app = new Vue({
                 this.nextStep();
             }
         },
+        program: function(){
+            this.reset();
+        }
     },
     methods:{
         step: function(){
@@ -63,11 +66,14 @@ var app = new Vue({
             this.registers.splice(index, 1, value)
         },
         runProgram: function(){
+            if(this.status == "done"){
+                this.reset();
+            }
             if(this.program){
-                this.status = "go"
+                this.status = "go";
             }
             else{
-                this.status = "done"
+                this.status = "done";
             }
         },
         pauseProgram: function(){
