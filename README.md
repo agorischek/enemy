@@ -70,7 +70,7 @@ The below details apply to this particular implementation of Enemy. Other implem
 
 - Register values do not wrap around when their limits are reached.
 
-- The output section has an option to either interpret values as numbers or as ASCII.
+- The output section will (eventually) have an option to either interpret values as numbers or as ASCII.
 
 ## Notations
 
