@@ -33,8 +33,10 @@ var app = new Vue({
                 this.nextStep();
             }
             else if(app.status == "input"){
-                $("#input").focus();
-                console.log("Trying to set focus")
+                setTimeout(function(){
+                    $("#input").focus();
+                },50);
+
             }
         },
         program: function(){
@@ -51,7 +53,7 @@ var app = new Vue({
             info.forEach(function(item, index){
                 info[index] = map[item]                         
             });
-            info = info.join("")
+            info = info.join("");
             return info;
         },
         step: function(){
