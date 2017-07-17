@@ -29,19 +29,24 @@ var app = new Vue({
     },
     watch:{
         status: function(){
-            if(app.status == "go"){
+            if(app.status == "go" || app.status == "step"){
                 this.nextStep();
             }
         },
     },
     methods:{
+        step: function(){
+            app.status = "step";
+        },
         reset: function(){
+            this.status = this.default.status;
             this.currentCommandIndex = this.default.currentCommandIndex;
-            this.registers = this.default.registers.slice();
+            var registers = this.default.registers.slice()
+            this.registers = registers;
             this.pointerA = this.default.pointerA;
             this.pointerB = this.default.pointerB;
-            this.status = this.default.status;
-            this.output = this.default.output.slice();
+            var output = this.default.output.slice()
+            this.output = output;
         },
         withinRange: function(value){
             if(value >= this.max){
@@ -58,7 +63,6 @@ var app = new Vue({
             this.registers.splice(index, 1, value)
         },
         runProgram: function(){
-            this.reset();
             this.status = "go"
         },
         pauseProgram: function(){
@@ -105,9 +109,12 @@ var app = new Vue({
                     break;                                    
             }
             this.currentCommandIndex++;
-            if(this.status != "input"){
-                this.status="delay";
+            if(this.status != "input" && this.status != "step"){
+                this.status = "delay";
                 setTimeout(this.proceed,this.delay);
+            }
+            if(this.status == "step"){
+                this.status = "pause";
             }
         },
         proceed: function(){
