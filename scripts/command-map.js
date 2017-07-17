@@ -12,13 +12,13 @@ var commandMap = {
         proper: "–——"
     },
     RL: {
-        verbose: "Left-left",
+        verbose: "Right-left",
         shorthand: "RL",
         legible: "mnn",
         proper: "—––"
     },
     RR: {
-        verbose: "Left-left",
+        verbose: "Right-right",
         shorthand: "RR",
         legible: "nnm",
         proper: "––—"
