@@ -74,13 +74,13 @@ button{
     min-width:120px;
 }
 #input-and-button-holder{
-    min-width:350px;
+    width:300px;
+    text-align: right;
 }
 #input-and-button{
     background-color:#81D6CF;
-    padding: 0px 0px 0px 10px;
     border-radius: 5px;
-    display:block;
+    display:inline-block;
 }
 #control-bar button{
     margin-left: 10px;
@@ -92,7 +92,9 @@ button{
 }
 #input{
     display:inline-block;
-    width:200px;
+    width:120px;
+    margin: 0 0 0 10px;
+    padding: 0 0 0 15px;
 }
 button, #input{
     height:50px;
