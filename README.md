@@ -4,9 +4,9 @@
 
 Enemy is a low-level, minimal, experimental, esoteric programming language.
 
-It has two unique features: It is dual-pointer (meaning that there are two cursors pointing to memory slots at all times) and it is written entirely with en and em dashes.
+It has two unique features: It is dual-pointer, meaning that there are two cursors pointing to memory slots at all times, and it is written entirely with en and em dashes.
 
-Enemy's name is derived from its constitution of entirely en and em dashes, as well as the fact that it is not your friend.
+Enemy's name is derived from its sole two characters, as well as the fact that it is not your friend.
 
 ## Raison D'être
 
