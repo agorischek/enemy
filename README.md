@@ -78,8 +78,8 @@ Enemy has four interchangeable notations: Verbose, Shorthand, Legible, and Prope
 
 | Verbose     | Shorthand | Legible | Proper |
 |-------------|-----------|---------|--------|
-| Left-left   | LL        | mmn     | ——–    |
-| Left-right  | LR        | nmm     | –——    |
+| Left-left   | LL        | nmm     | –——    |
+| Left-right  | LR        | mmn     | ——–    |
 | Right-left  | RL        | mnn     | —––    |
 | Right-right | RR        | nnm     | ––—    |
 | Open        | OP        | mnm     | —–—    |

@@ -2,14 +2,14 @@ var commandMap = {
     LL: {
         verbose: "Left-left",
         shorthand: "LL",
-        legible: "mmn",
-        proper: "——–"
+        legible: "nmm",
+        proper: "–——"
     },
     LR: {
         verbose: "Left-right",
         shorthand: "LR",
-        legible: "nmm",
-        proper: "–——"
+        legible: "mmn",
+        proper: "——–"
     },
     RL: {
         verbose: "Right-left",
