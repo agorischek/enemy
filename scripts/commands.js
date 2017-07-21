@@ -39,7 +39,7 @@ var commands = {
     },
     OP: function(){
         var matchingClose = app.openClosePairs.open[app.currentCommandIndex];
-        var jumpTo = matchingClose + 1
+        var jumpTo = matchingClose
         if(app.pointersAreEqual){
             app.currentCommandIndex = jumpTo
         }
