@@ -1,28 +1,47 @@
 /**
  * @license
- * MyFonts Webfont Build ID 3422248, 2017-07-16T21:08:07-0400
- * 
+ * MyFonts Webfont Build ID 3685192, 2018-12-08T16:14:04-0500
+ *
  * The fonts listed in this notice are subject to the End User License
- * Agreement(s) entered into by the website owner. All other parties are 
- * explicitly restricted from using the Licensed fonts(s).
- * 
+ * Agreement(s) entered into by the website owner. All other parties are
+ * explicitly restricted from using the Licensed Webfonts(s).
+ *
  * You may obtain a valid license at the URLs below.
- * 
+ *
+ * Webfont: Monospace821BT-Roman by Bitstream
+ * URL: https://www.myfonts.com/fonts/bitstream/monospace-821/std-roman-176218/
+ * Copyright: Copyright 1990-2003 Bitstream Inc. All rights reserved.
+ *
  * Webfont: Stolzl-Regular by The Northern Block Ltd
  * URL: https://www.myfonts.com/fonts/northernblock/stolzl/regular/
  * Copyright: Copyright (c) 2015 by Mariya Pigoulevskaya. All rights reserved.
+ *
+ *
+ * License: https://www.myfonts.com/viewlicense?type=web&buildid=3685192
  * Licensed pageviews: 10,000
- * 
- * 
- * License: https://www.myfonts.com/viewlicense?type=web&buildid=3422248
- * 
- * © 2017 MyFonts Inc
+ *
+ * © 2018 MyFonts Inc
 */
 
-
 /* @import must be at top of file, otherwise CSS will not work */
-@import url("//hello.myfonts.net/count/343828");
+@import url("//hello.myfonts.net/count/383b48");
 
-  
-@font-face {font-family: 'Stolzl-Regular';src: url('../fonts/343828_0_0.eot');src: url('../fonts/343828_0_0.eot?#iefix') format('embedded-opentype'),url('../fonts/343828_0_0.woff2') format('woff2'),url('../fonts/343828_0_0.woff') format('woff'),url('../fonts/343828_0_0.ttf') format('truetype');}
- 
+@font-face {
+  font-family: "Monospace821";
+  font-weight: normal;
+  font-style: normal;
+  src: url("../fonts/383B48_0_0.eot");
+  src: url("../fonts/383B48_0_0.eot?#iefix") format("embedded-opentype"),
+    url("../fonts/383B48_0_0.woff2") format("woff2"),
+    url("../fonts/383B48_0_0.woff") format("woff"),
+    url("../fonts/383B48_0_0.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Stolzl-Regular";
+  src: url("../fonts/383B48_1_0.eot");
+  src: url("../fonts/383B48_1_0.eot?#iefix") format("embedded-opentype"),
+    url("../fonts/383B48_1_0.woff2") format("woff2"),
+    url("../fonts/383B48_1_0.woff") format("woff"),
+    url("../fonts/383B48_1_0.ttf") format("truetype");
+}
