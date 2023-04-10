@@ -8,6 +8,26 @@ It has two unique features: It is dual-pointer, meaning that there are two curso
 
 Enemy's name is derived from its sole two characters, as well as the fact that it is not your friend.
 
+## Examples
+
+Addition:
+
+```
+—–––––——–––––——————––———
+```
+
+Multiplication:
+
+```
+——––––——––––——––——–——–——–––––———–——–——–––––———––—–—–——–———––—––—————–——–––—––—–––—–––—–—––—––—––———
+```
+
+Fibonacci:
+
+```
+—––——————––—————–——––———––——–—––—––———–———–———––—–––—–––——————–—–—––———–———–———–––—––———–––—–
+```
+
 ## Raison D'être
 
 In the tradition of esoteric languages, Enemy not intended to have practical purpose. Rather, it is intended to push the idea behind the esoteric language BF to its logical extreme: BF might be incredibly difficult to read, but Enemy is literally impossible, as Enemy programs displayed in monospace font are simply continuous lines.
